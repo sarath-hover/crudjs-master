@@ -2,8 +2,9 @@ const express = require("express");
 const { addListener } = require("../models/CrudDB");
 const router = express.Router();
 const CrudDB1 = require("../models/CrudDB");
+const { default: mongoose } = require("mongoose");
 
-//GET Reading the total data from the database 
+//GET Reading the total data from the database
 router.get("/", async (req, res) => {
   try {
     const DBdata = await CrudDB1.find();
@@ -43,6 +44,7 @@ router.post("/", async (req, res) => {
     bloodGroup: req.body.bloodGroup,
     height: req.body.height,
     weight: req.body.weight,
+    city: req.body.city,
   });
   try {
     const Data1 = await DBdata.save();
@@ -62,34 +64,51 @@ router.put("/:id", async (req, res) => {
     if (!post) return res.status(404).json({ msg: "User not found" });
 
     // Update the user name and age
-    post.firstName= req.body.firstName,
-    post.lastName= req.body.lastName,
-    post.maidenName= req.body.maidenName,
-    post.age= req.body.age,
-    post.gender= req.body.gender,
-    post.email= req.body.email,
-    post.phone= req.body.phone,
-    post.username= req.body.username,
-    post.password= req.body.password,
-    post.birthDate= req.body.birthDate,
-    post.image= req.body.image,
-    post.bloodGroup= req.body.bloodGroup,
-    post.height= req.body.height,
-    post.weight= req.body.weight 
+    (post.firstName = req.body.firstName),
+      (post.lastName = req.body.lastName),
+      (post.maidenName = req.body.maidenName),
+      (post.age = req.body.age),
+      (post.gender = req.body.gender),
+      (post.email = req.body.email),
+      (post.phone = req.body.phone),
+      (post.username = req.body.username),
+      (post.password = req.body.password),
+      (post.birthDate = req.body.birthDate),
+      (post.image = req.body.image),
+      (post.bloodGroup = req.body.bloodGroup),
+      (post.height = req.body.height),
+      (post.weight = req.body.weight),
+      (post.city = req.body.city);
     await post.save();
 
     res.json(post);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
-  }
+  }
 });
 //===============================================================================================
 
 // patch/ update request
 router.patch("/:id", async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["firstName", "lastName", "maidenName", "age", "gender", "email", "phone", "username", "password", "birthDate", "image", "bloodGroup", "height", "weight"];
+  const allowedUpdates = [
+    "firstName",
+    "lastName",
+    "maidenName",
+    "age",
+    "gender",
+    "email",
+    "phone",
+    "username",
+    "password",
+    "birthDate",
+    "image",
+    "bloodGroup",
+    "height",
+    "weight",
+    "city",
+  ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -111,7 +130,7 @@ router.patch("/:id", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
-  }
+  }
 });
 //===============================================================================================
 
@@ -126,5 +145,17 @@ router.delete("/:id", async (req, res) => {
   }
 });
 //===============================================================================================
+
+// ________________________________ For post image _____________________________________
+const Images = mongoose.model("CrudDB");
+router.post("/:id", async (req, res) => {
+  const { base64 } = req.body;
+  try {
+    Images.create({ image: base64 });
+    res.send({ Status: "OK" });
+  } catch (error) {
+    res.send({ Status: "error", data: error });
+  }
+});
 
 module.exports = router;

@@ -14,7 +14,7 @@ const CrudDBSchema = new mongoose.Schema({
   lastName: {
     type: String,
     require: true,
-  },  
+  },
   maidenName: {
     type: String,
     require: true,
@@ -61,6 +61,10 @@ const CrudDBSchema = new mongoose.Schema({
   },
   weight: {
     type: Number,
+    require: true,
+  },
+  city: {
+    type: String,
     require: true,
   },
 });
