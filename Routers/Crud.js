@@ -64,7 +64,8 @@ router.put("/:id", async (req, res) => {
     if (!post) return res.status(404).json({ msg: "User not found" });
 
     // Update the user name and age
-    (post.firstName = req.body.firstName),
+    (post.id = req.body.id),
+      (post.firstName = req.body.firstName),
       (post.lastName = req.body.lastName),
       (post.maidenName = req.body.maidenName),
       (post.age = req.body.age),
